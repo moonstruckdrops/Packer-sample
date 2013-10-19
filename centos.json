@@ -1,0 +1,43 @@
+{
+    "builders": [
+        {
+            "type": "virtualbox",
+            "vm_name": "centos_box",
+            "guest_os_type": "RedHat_64",
+            "disk_size": "20000",
+            "format": "ovf",
+            "hard_drive_interface":"sata",
+            "boot_wait": "5s",
+            "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso",
+            "iso_checksum_type": "md5",
+            "iso_checksum": "4a5fa01c81cc300f4729136e28ebe600",
+            "ssh_username":"root",
+            "ssh_password":"vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout":"30s",
+            "shutdown_command": "shutdown -h now",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version",
+            "vboxmanage":[
+                ["modifyvm", "{{.Name}}", "--memory", "1024"],
+                ["modifyvm", "{{.Name}}", "--cpus", "2"]
+            ],
+            "http_directory": "./builders/",
+            "boot_command": [
+                "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+            ]
+        }
+    ],
+    "provisioners": [{
+        "type": "shell",
+        "inline": [
+            "sleep 30",
+            "sudo yum -y update",
+            "sudo yum -y install git"
+            ]
+    }],
+    "post-processors": [{
+        "type": "vagrant",
+        "output": "centos.box"
+    }]
+}
