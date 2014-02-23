@@ -8,15 +8,14 @@
             "format": "ovf",
             "hard_drive_interface":"sata",
             "boot_wait": "5s",
-            "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso",
+            "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
             "iso_checksum_type": "md5",
-            "iso_checksum": "4a5fa01c81cc300f4729136e28ebe600",
-            "ssh_username":"root",
+            "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+            "ssh_username":"vagrant",
             "ssh_password":"vagrant",
             "ssh_port": 22,
-            "ssh_wait_timeout":"30s",
-            "shutdown_command": "shutdown -h now",
-            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "shutdown_command": "sudo shutdown -h now",
+            "guest_additions_path": "VBoxGuestAdditions.iso",
             "virtualbox_version_file": ".vbox_version",
             "vboxmanage":[
                 ["modifyvm", "{{.Name}}", "--memory", "1024"],
@@ -29,12 +28,11 @@
         }
     ],
     "provisioners": [{
-        "type": "shell",
-        "inline": [
-            "sleep 30",
-            "sudo yum -y update",
-            "sudo yum -y install git"
-            ]
+        "type": "chef-solo",
+        "cookbook_paths": ["./cookbooks/"],
+        "run_list": ["recipe[moonstruckdrops::default]"],
+        "prevent_sudo": false,
+        "skip_install": false
     }],
     "post-processors": [{
         "type": "vagrant",
