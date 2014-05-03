@@ -14,7 +14,7 @@
             "ssh_username":"vagrant",
             "ssh_password":"vagrant",
             "ssh_port": 22,
-            "shutdown_command": "sudo shutdown -h now",
+            "shutdown_command": "echo 'vagrant' | sudo -S shutdown -h now",
             "guest_additions_path": "VBoxGuestAdditions.iso",
             "virtualbox_version_file": ".vbox_version",
             "vboxmanage":[
@@ -27,13 +27,14 @@
             ]
         }
     ],
-    "provisioners": [{
-        "type": "chef-solo",
-        "cookbook_paths": ["./cookbooks/"],
-        "run_list": ["recipe[moonstruckdrops::default]"],
-        "prevent_sudo": false,
-        "skip_install": false
-    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": [
+                "provision/vboxaddition.sh"
+            ]
+        }
+    ],
     "post-processors": [{
         "type": "vagrant",
         "output": "centos.box"
